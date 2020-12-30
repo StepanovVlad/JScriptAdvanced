@@ -123,8 +123,17 @@ img {
     display: flex;
 }
 .cart-item img{
+
     align-self: flex-start;
     margin-right: 15px;
+}
+.cart-item-count{
+    width: 70px;
+}
+
+.cart-total{
+    display: block;
+    margin-bottom: 15px;
 }
 .product-single-price{
     color: #474747;
