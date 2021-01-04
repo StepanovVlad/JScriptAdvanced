@@ -9,22 +9,47 @@
     <title>Document</title>
 </head>
 <body>
-    <header>
-        <div class="logo">Одежда</div>
-        <div class="cart">
-            <form action="#" class="search-form">
-                <input type="text" class="search-field">
-                <button class="btn-search" type="submit">
-                    <i class="fas fa-search"></i>
-                </button>
-            </form>
-            <button class="btn-cart" type="button">Корзина</button>
-            <div class="cart-block invisible"></div>
-        </div>
-    </header>
-    <main>
-        <div id="catalog" class="products"></div>
-    </main>
+    <div id="app">
+        <header>
+            <div class="logo">Интернет Магазин</div>
+            <div class="cart">
+                <form action="#" method="post" class="search-form" @submit.prevent="filter">
+                    <input type="text" class="search-field" v-model="userSearch">
+                    <button class="btn-search" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+                <button class="btn-cart" type="button" @click="cartVisible = !cartVisible">Корзина</button>
+                <div id="cart" class="cart-block" v-show="cartVisible">
+                    <p v-if="!cartItems.length">Корзина пуста</p>
+                    <div class="cart-item" v-for="el of cartItems" :key="el.id_product">
+                        <img :src="imgCart" alt="el.product_name">
+                        <div class="desc-cart">
+                            <h3>{{el.product_name}}</h3>
+                            <p>{{el.price}}</p>
+                            <input :id="el.id_product"  type="number" class="cart-item-count" :min="1" :value="el.quantity" @input="validInput(el)">
+                            <p>total {{el.quantity * el.price}}</p>
+                            <button class="del-btn" data-id="el.id_product" @click="removeItem(el)">Удалить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main>
+            <div class="products">
+                <div class="product-item" v-for="el of filtered" :key="el.id_product">
+                    <img :src="imgCatalog" :alt="el.product_name">
+                    <div class="desc">
+                        <h3>{{el.product_name}}</h3>
+                        <p>{{el.price}}</p>
+                        <button class="buy-btn" @click="addItem(el)">Купить</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

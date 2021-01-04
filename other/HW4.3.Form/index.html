@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form</title>
+    <link rel="stylesheet" href="form.css">
+</head>
+<body>
+    <form id="validator" action="#">
+        <fieldset>
+            <label for="name">Введите ваше имя:</label>
+                <p class="error">Имя должно содержать только буквы</p>
+                    <input id="name" type="text">
+            <label for="phone">Введите ваш номер телефона:</label>
+                <p class="error">Формат ввода +7(000)000-0000</p>
+                    <input id="phone" type="text">
+            <label for="email">Введите ваш email:</label>
+                <p class="error">Формат ввода mymail@mail.ru</p>
+                    <input id="email" type="text">
+            <label for="comment">Комментарий:</label>
+                <textarea name="text" id="comment" cols="30" rows="10"></textarea>
+            <div class="buttons">
+                <input class="button ok-btn" type="submit">
+                <input class="button" type="reset">
+            </div>
+        </fieldset>
+    </form>
+    <script>
+
+    class Validator {
+        constructor(form = 'validator', name = 'name', phone = 'phone', email = 'email') {
+            this.form = document.getElementById(form);
+            this.name = document.getElementById(name);
+            this.phone = document.getElementById(phone);
+            this.email = document.getElementById(email);
+            this.reg = { name:  /^[a-zа-яё]+$/i,
+                        phone: /^([\+]+)*\d\(\d{3}\)\d{3}-\d{4}/,
+                        email: /^[-._a-z0-9]+@(?:[a-z0-9][-a-z0-9]+\.)+[a-z]{2,6}$/i}
+            this._init();
+        }
+        _init() {
+            this._addListeners();
+        }
+        _addListeners() {
+            this.form.addEventListener( 'click', e => {
+                if (e.target.classList.contains("ok-btn")) {
+                    e.preventDefault();
+                    if (this._checkInput(this.name, this.reg.name) &
+                        this._checkInput(this.phone, this.reg.phone) &
+                        this._checkInput(this.email, this.reg.email)) {
+                            this.form.submit();
+                            alert('OK');
+                    }
+                }
+            })
+        }
+        _checkInput(el, reg) {
+            if (reg.test(el.value)) {
+                el.classList.remove("border-red");
+                this._handleError(el, 'none');
+                return true;
+            } else {
+                el.classList.add("border-red");
+                this._handleError(el, 'block');
+            }
+        }
+        _handleError(el, display) {
+            el.previousElementSibling.style.display = display;
+        }
+    }
+
+    let validator = new Validator();
+    </script>
+</body>
+</html>
