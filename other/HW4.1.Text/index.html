@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form</title>
+    <link rel="stylesheet" href="form.css">
+</head>
+<body>
+    <table id="origin"></table>
+        <button class="button" data-id="1">Заменить все кавычки</button>
+        <button class="button" data-id="0">Заменить кавычки только в конце и начале предложения</button>
+        <button class="button" data-id="-1">вернуть исходный текст</button>
+    <script>
+
+        const dialog = [
+            {english:  "'Thank you very much, Mark.'",                          russian: "Спасибо большое, Марк."},
+            {english: "'You're welcome.'",                                      russian: "Пожалуйста."},
+            {english: "'I'm really sorry about the coffee.'",                   russian: "Я действительно сожалею о кофе."},
+            {english: "'That's OK. It's late.'",                                russian:  "Нормально. Уже поздно."},
+            {english: "'Our meeting's at twelve thirty.'",                      russian: "Наше собрание в двенадцать тридцать."},
+            {english: "'We can take a taxi.'",                                  russian: "Мы можем взять такси."},
+            {english: "'OK.'",	                                                russian: "ОК."},
+            {english: "'Do you like the shirt?'",                               russian: "Тебе нравится блузка?"},
+            {english: "'Well, yeah, it's exactly the same as the other one.'",	russian: "Ну, да, она точно такая же, как прежняя."},
+            {english: "'The same? It's completely different!'",                 russian: "Такая же? Она совершенно другая!"},
+            {english: "'Sorry!'",                                               russian: "Прости!"},
+            {english: "'Typical man!'",                                         russian: "Типичный мужчина!"},
+            {english: "'Allie, can I ask you something?'",                      russian: "Элли, могу ли я спросить тебя?"},
+            {english: "'Yeah. What?'",                                          russian: "Да. Что?"},
+            {english: "'Would you like to have dinner with me tonight?'",       russian: "Ты хотела бы пообедать со мной сегодня вечером?"},
+            {english: "'Tonight?'",	                                            russian: "Сегодня вечером?"},
+            {english: "'Yeah. You see… it's my birthday.'",                     russian: "Да. Видишь ли ... сегодня мой день рождения."},
+            {english: "'Oh! Happy birthday!'",                                  russian: "О! С днем рождения!"},
+            {english: "'I'm sorry, but I can't have dinner tonight.'",          russian: "Мне очень жаль, но я не могу пообедать сегодня вечером."},
+            {english: "'I'm busy.'",                                            russian: "Я занята."},
+            {english: "'Oh.'",	                                                russian: "О."},
+            {english: "'How about Friday night?'",	                            russian: "А как насчет в пятницу вечером?"},
+            {english: "'Friday? Well...OK.'",                                   russian: "В пятницу? Ну...ОК."},
+            {english: "'Do you know a good restaurant?'",                       russian: "Ты знаешь хороший ресторан?"},
+            {english: "'Let me think.'",	                                    russian: "Дай мне подумать."},
+            {english: "'Do you like Italian food?'",                            russian: "Тебе нравится итальянская еда?"},
+            {english: "'I love it.'",                                           russian: "Я люблю её."},
+            {english: "'Well, there's a new Italian restaurant.'",              russian: "Ну, есть новый итальянский ресторан."},
+            {english: "'We can go there.'",                                     russian: "Мы можем пойти туда."},
+            {english: "'Good idea. Taxi!'",                                     russian: "Хорошая идея. Такси!"}
+        ]
+
+    class Table {
+        constructor(dialog, id = 'origin',) {
+            this.origin = dialog;
+            this.change = [];
+            this.block = document.getElementById(id);
+            this.reg = {
+                all: /'/g,
+                notAll: /'\B|\B'/g
+            };
+            this._init();
+        }
+        _render(dialog) {
+            this.block.innerHTML = dialog.map((item) =>
+                `<tr><td>${item.english}</td><td>${item.russian}</td></tr>`
+            ).join('');
+        }
+        _init() {
+            this._render(this.origin);
+            this._addListeners();
+        }
+        _addListeners() {
+            document.addEventListener('click', e => {
+                if(e.target.classList.contains('button')) {
+                    const id = +e.target.dataset['id'];
+                    if(id < 0) { this._render(this.origin)
+                    } else {this._changeDialog(id)}
+                }
+            })
+        }
+        _changeDialog(id) {
+            let reg = id ? this.reg.all : this.reg.notAll;
+            this.change = this.origin.map((item) => ({
+                english: item.english.replace(reg, '"'), russian: item.russian}))
+            this._render(this.change);
+        }
+    }
+
+    let table = new Table(dialog);
+    </script>
+</body>
+</html>
